@@ -1,5 +1,6 @@
 package com.example.Kiosk.ai.service;
 
+import com.example.Kiosk.ai.dto.AiResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.audio.transcription.AudioTranscriptionPrompt;
 import org.springframework.ai.audio.transcription.AudioTranscriptionResponse;
@@ -63,7 +64,7 @@ public class AiService {
         return response.map(speechResponse -> speechResponse.getResult().getOutput());
     }
 
-    public Flux<byte[]> chatVoiceSttLlmTts(byte[] audioBytes) {
+    public AiResponseWrapper chatVoiceSttLlmTts(byte[] audioBytes) {
         // 1. 음성 -> 텍스트
         String textQuestion = stt(audioBytes);
 
@@ -122,7 +123,10 @@ public class AiService {
         log.info("AI 응답 (LLM): {}", textAnswer);
 
         // 3. AI 텍스트 -> 스트리밍 음성
-        return ttsFlux(textAnswer);
+        Flux<byte[]> audioFlux = ttsFlux(textAnswer);
+
+        // 4. (수정) 텍스트와 음성을 Wrapper에 담아 반환
+        return new AiResponseWrapper(textAnswer, audioFlux);
     }
 
 
