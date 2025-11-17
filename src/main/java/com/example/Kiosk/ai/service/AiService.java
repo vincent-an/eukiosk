@@ -37,13 +37,24 @@ public class AiService {
                 .media(new Media(MimeType.valueOf(mimeType), resource))
                 .build();
 
+        //(수정) 이 부분이 변경되었습니다
         ChatOptions chatOptions = OpenAiChatOptions.builder()
-                .model(OpenAiApi.ChatModel.GPT_4_O_MINI_AUDIO_PREVIEW)
+                // (수정) Enum 대신, 사진에 나온 "문자열" 모델 이름으로 직접 지정
+                .model("gpt-4o-mini-audio")
                 .outputModalities(List.of("text", "audio"))
                 .outputAudio(new OpenAiApi.ChatCompletionRequest.AudioParameters(
                         OpenAiApi.ChatCompletionRequest.AudioParameters.Voice.ALLOY,
                         OpenAiApi.ChatCompletionRequest.AudioParameters.AudioResponseFormat.MP3))
                 .build();
+        //(수정) 여기까지
+
+//        ChatOptions chatOptions = OpenAiChatOptions.builder()
+//                .model(OpenAiApi.ChatModel.GPT_4_O_MINI_AUDIO_PREVIEW)
+//                .outputModalities(List.of("text", "audio"))
+//                .outputAudio(new OpenAiApi.ChatCompletionRequest.AudioParameters(
+//                        OpenAiApi.ChatCompletionRequest.AudioParameters.Voice.ALLOY,
+//                        OpenAiApi.ChatCompletionRequest.AudioParameters.AudioResponseFormat.MP3))
+//                .build();
 
         ChatResponse response = chatClient.prompt()
                 .system("너는 시각장애인을 위한 똑똑하고 상냥하고 계산도 잘하는 을지 키오스크의 음성 주문 담당자야." +
